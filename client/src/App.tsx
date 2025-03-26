@@ -12,6 +12,9 @@ const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/Profile"));
 const EventPage = lazy(() => import("./pages/EventPage"));
 const Catalog = lazy(() => import("./pages/Catalog"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
 function App() {
