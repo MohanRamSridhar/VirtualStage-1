@@ -75,7 +75,7 @@ export class MemStorage implements IStorage {
   }
 
   private setupInitialData() {
-    // Add some sample events
+    // Add sample events with different types to showcase various environments
     const sampleEvents: InsertEvent[] = [
       {
         title: "Neon Dreams Electronic Festival",
@@ -155,6 +155,71 @@ export class MemStorage implements IStorage {
         isLive: false,
         isPremium: false,
         tags: ["jazz", "club", "intimate", "night"],
+        spatialAudio: true
+      },
+      // Additional event types to showcase different environments
+      {
+        title: "La Traviata: VR Opera Experience",
+        description: "Experience Verdi's classic opera in a breathtaking virtual theater production with immersive audio and visuals.",
+        date: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000), // 9 days from now
+        duration: 150,
+        type: "theater",
+        genre: "opera",
+        artist: "VR Opera Company",
+        thumbnail: "https://images.unsplash.com/photo-1522776851755-3125f04b8e9e",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "theater",
+        isLive: false,
+        isPremium: true,
+        tags: ["opera", "classical", "theater", "immersive"],
+        spatialAudio: true
+      },
+      {
+        title: "Future of AI Conference 2025",
+        description: "Join leading experts in artificial intelligence for a day of presentations and discussions about the future of AI.",
+        date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
+        duration: 480, // 8 hours
+        type: "conference",
+        genre: "technology",
+        artist: "Various Speakers",
+        thumbnail: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "conference_hall",
+        isLive: false,
+        isPremium: true,
+        tags: ["tech", "ai", "conference", "education"],
+        spatialAudio: false
+      },
+      {
+        title: "Modern Dance Fusion",
+        description: "A groundbreaking contemporary dance performance exploring the intersection of movement, technology, and human emotion.",
+        date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
+        duration: 90,
+        type: "theater",
+        genre: "dance",
+        artist: "Digital Movement Collective",
+        thumbnail: "https://images.unsplash.com/photo-1594745561049-37e9172792f5",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "theater",
+        isLive: true,
+        isPremium: false,
+        tags: ["dance", "contemporary", "performance", "art"],
+        spatialAudio: true
+      },
+      {
+        title: "Indie Game Showcase 2025",
+        description: "Explore the future of independent game development with demonstrations, talks, and hands-on experiences from talented indie developers.",
+        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
+        duration: 360, // 6 hours
+        type: "exhibition",
+        genre: "gaming",
+        artist: "Independent Game Developers",
+        thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "gallery",
+        isLive: false,
+        isPremium: false,
+        tags: ["gaming", "indie", "interactive", "technology"],
         spatialAudio: true
       }
     ];

@@ -58,6 +58,34 @@ export default function SpatialAudio({ eventId, environmentType }: SpatialAudioP
     }
   }, [environmentType, eventId]);
   
+  // Get the appropriate audio file based on environment type
+  const getAudioFile = (environmentType: string, sourceType: string): string => {
+    // For a real application, we would have different music files for different event types
+    // For now, we'll use the background.mp3 file and add logic for future expansion
+    if (sourceType.includes('stage-main')) {
+      switch (environmentType.toLowerCase()) {
+        case 'stadium':
+        case 'arena':
+          return "/sounds/background.mp3"; // Upbeat, energetic music for stadiums
+        case 'theater':
+          return "/sounds/background.mp3"; // Classical or orchestral music
+        case 'gallery':
+          return "/sounds/background.mp3"; // Ambient, atmospheric music
+        case 'club':
+          return "/sounds/background.mp3"; // Electronic, dance music
+        default:
+          return "/sounds/background.mp3";
+      }
+    } else if (sourceType.includes('ambient')) {
+      // Ambient sounds would be different based on the environment
+      // But for now, we use the same file with different volumes
+      return "/sounds/background.mp3";
+    } else {
+      // Other sound sources
+      return "/sounds/background.mp3";
+    }
+  };
+
   // Initialize audio when component mounts
   useEffect(() => {
     // Make sure audio context is initialized
@@ -65,21 +93,37 @@ export default function SpatialAudio({ eventId, environmentType }: SpatialAudioP
     
     // Only set up audio sources if context exists and spatial audio is enabled
     if (audioContext && spatialAudioEnabled && spatialEnabledInVR) {
-      // We'll use the same music file for all sources in this demo
-      // but with different volumes to simulate different parts of the environment
       const setupAudioSources = async () => {
         audioPositions.forEach((source, index) => {
-          const audioEl = new Audio("/sounds/background.mp3");
+          // Select the appropriate audio file based on environment and source type
+          const audioFile = getAudioFile(environmentType, source.id);
+          
+          const audioEl = new Audio(audioFile);
           audioEl.loop = true;
           audioEl.volume = 0; // Start with zero volume, the spatial audio system will control volume
           
-          // Create audio node with position
+          // Different initial volumes based on source position and environment
+          let sourceVolume = 0.5;
+          
+          // Main stage sources are louder
+          if (source.id.includes('stage-main')) {
+            sourceVolume = 0.8;
+          } 
+          // Ambient sources are quieter
+          else if (source.id.includes('ambient')) {
+            sourceVolume = 0.3;
+          }
+          // Side stage sources have medium volume
+          else if (source.id.includes('stage')) {
+            sourceVolume = 0.5;
+          }
+          
+          // Create audio node with position and calculated volume
           createAudioNode(
             source.id, 
             audioEl, 
             source.position as [number, number, number],
-            // Different volumes for different sources
-            index === 0 ? 0.8 : 0.4 // Main source louder than ambient
+            sourceVolume
           );
           
           // Keep track of created element to clean up later
