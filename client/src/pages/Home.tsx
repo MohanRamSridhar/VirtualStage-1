@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEvents } from "@/lib/stores/useEvents";
 import { useAuth } from "@/lib/stores/useAuth";
 import EventCard from "@/components/events/EventCard";
-import { ArrowRight, Music, Calendar, Ticket, Headphones } from "lucide-react";
+import { ArrowRight, Music, Calendar, Ticket, Headphones, Users, Tv } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 export default function Home() {
