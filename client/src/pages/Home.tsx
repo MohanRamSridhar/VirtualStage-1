@@ -47,81 +47,97 @@ export default function Home() {
         <meta name="description" content="Experience incredible concerts and cultural events in virtual reality with immersive spatial audio and interactive features." />
       </Helmet>
       
-      <div className="container mx-auto py-8">
-        {/* Hero Section */}
-        <section className="mb-12">
+      {/* Hero Section with gradient background */}
+      <section className="hero-section py-16 mb-12">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                Immersive <span className="text-primary">VR Events</span> From Anywhere
+            <div className="space-y-6 px-4 md:px-0">
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                Experience <span className="text-purple-200">Live Events</span> in Virtual Reality
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Experience concerts, exhibitions, and cultural events in stunning virtual reality with spatial audio and real-time interactions.
+              <p className="text-xl text-purple-100">
+                Join concerts, exhibitions, and cultural events from anywhere in the world with stunning VR and spatial audio.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
+                <Button size="lg" className="bg-white text-purple-900 hover:bg-purple-100" asChild>
                   <Link to="/events">Browse Events</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20" asChild>
                   <Link to="/how-it-works">How It Works</Link>
                 </Button>
               </div>
               
               {/* Feature highlights */}
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Headphones className="h-5 w-5 text-primary" />
+              <div className="grid grid-cols-2 gap-6 pt-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-3 rounded-full">
+                    <Headphones className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-sm font-medium">Spatial Audio</span>
+                  <span className="font-medium text-white">3D Spatial Audio</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Calendar className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-3 rounded-full">
+                    <Calendar className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-sm font-medium">Live & On-Demand</span>
+                  <span className="font-medium text-white">Live & On-Demand</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Music className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-3 rounded-full">
+                    <Music className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-sm font-medium">Multiple Genres</span>
+                  <span className="font-medium text-white">Multiple Genres</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Ticket className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-3 rounded-full">
+                    <Ticket className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-sm font-medium">Premium Events</span>
+                  <span className="font-medium text-white">Premium Events</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex justify-center">
-              <svg
-                width="500"
-                height="400"
-                viewBox="0 0 500 400"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full max-w-md"
-              >
-                <rect x="100" y="50" width="300" height="200" rx="10" fill="#1a1a1a" />
-                <circle cx="250" cy="150" r="60" fill="#3a3a3a" />
-                <path d="M250 90 C190 150, 190 150, 250 210" stroke="#4a4a4a" strokeWidth="4" />
-                <path d="M250 90 C310 150, 310 150, 250 210" stroke="#4a4a4a" strokeWidth="4" />
-                <rect x="130" y="250" width="240" height="20" rx="5" fill="#2a2a2a" />
-                <circle cx="160" cy="260" r="8" fill="#4a4a4a" />
-                <rect x="180" y="255" width="170" height="10" rx="5" fill="#3a3a3a" />
-                <rect x="80" y="290" width="340" height="60" rx="10" fill="#1a1a1a" />
-                <text x="250" y="325" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#ffffff">VR CONCERT EXPERIENCE</text>
-                <circle cx="100" cy="320" r="8" fill="#4a4a4a" />
-                <circle cx="120" cy="320" r="8" fill="#4a4a4a" />
-                <circle cx="140" cy="320" r="8" fill="#4a4a4a" />
-                <rect x="370" y="310" width="30" height="20" rx="5" fill="#3a3a3a" />
-              </svg>
+            <div className="relative hidden md:block">
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+              
+              <div className="relative">
+                <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-white/10">
+                  <div className="aspect-video rounded-lg overflow-hidden bg-black/60 border border-white/10 mb-4">
+                    <div className="h-full flex items-center justify-center">
+                      <svg width="200" height="120" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="20" y="20" width="160" height="80" rx="5" fill="#1a1a1a" />
+                        <path d="M100 30 C70 60, 70 60, 100 90" stroke="#8b5cf6" strokeWidth="4" />
+                        <path d="M100 30 C130 60, 130 60, 100 90" stroke="#8b5cf6" strokeWidth="4" />
+                        <circle cx="100" cy="60" r="10" fill="#8b5cf6" />
+                        <rect x="80" y="95" width="40" height="6" rx="3" fill="#8b5cf6" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-white font-bold">Live Now</div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse mr-1"></div>
+                      <span className="text-red-400 text-sm">2.4K watching</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <div className="flex gap-2">
+                      <div className="w-8 h-8 rounded-full bg-white/10"></div>
+                      <div className="w-8 h-8 rounded-full bg-white/10"></div>
+                      <div className="w-8 h-8 rounded-full bg-white/10"></div>
+                    </div>
+                    <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700">Join VR</Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+      
+      <div className="container mx-auto px-4 py-8">
         
         {/* Featured Event Section */}
         {featuredEvent && (

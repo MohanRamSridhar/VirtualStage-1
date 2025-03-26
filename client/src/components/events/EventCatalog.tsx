@@ -24,15 +24,19 @@ export default function EventCatalog() {
   // State for filter visibility on mobile
   const [showFilters, setShowFilters] = useState(false);
   
-  // Fetch events on component mount
+  // Fetch events on component mount (only once)
   useEffect(() => {
-    fetchEvents();
-    
-    // Fetch recommendations if user is authenticated
-    if (isAuthenticated && user) {
-      fetchRecommendations(user.id);
-    }
-  }, [fetchEvents, fetchRecommendations, isAuthenticated, user]);
+    // Using an IIFE to avoid dependency on fetchEvents function reference
+    (async () => {
+      await fetchEvents();
+      
+      // Fetch recommendations if user is authenticated
+      if (isAuthenticated && user) {
+        await fetchRecommendations(user.id);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user?.id]);
   
   // Get upcoming events for the featured section
   const upcomingEvents = events.filter(
