@@ -390,39 +390,39 @@ export class MemStorage implements IStorage {
     const interactions = await this.getUserEventInteractions(userId);
     
     // Track genres the user has interacted with
-    const genreScores: Record<string, number> = {};
+    let scores: Record<string, number> = {};
     
     // Count interactions by genre
     for (const interaction of interactions) {
       const event = await this.getEvent(interaction.eventId);
       if (event) {
-        if (!genreScores[event.genre]) {
-          genreScores[event.genre] = 0;
+        if (!scores[event.genre]) {
+          scores[event.genre] = 0;
         }
         
         // Increase score based on interaction type
-        if (interaction.attended) genreScores[event.genre] += 3;
-        if (interaction.bookmarked) genreScores[event.genre] += 2;
-        if (interaction.rating) genreScores[event.genre] += interaction.rating;
+        if (interaction.attended) scores[event.genre] += 3;
+        if (interaction.bookmarked) scores[event.genre] += 2;
+        if (interaction.rating) scores[event.genre] += interaction.rating;
       }
     }
     
     // Add scores from user preferences
     if (user.preferences.genres) {
       for (const genre of user.preferences.genres) {
-        if (!genreScores[genre]) {
-          genreScores[genre] = 0;
+        if (!scores[genre]) {
+          scores[genre] = 0;
         }
-        genreScores[genre] += 5; // Preferences get a high weight
+        scores[genre] += 5; // Preferences get a high weight
       }
     }
     
     // Get all upcoming events
-    const upcomingEvents = await this.getUpcomingEvents();
+    let upcoming = await this.getUpcomingEvents();
     
     // Score each event
-    const scoredEvents = upcomingEvents.map(event => {
-      const genreScore = genreScores[event.genre] || 0;
+    let scored = upcoming.map(event => {
+      const genreScore = scores[event.genre] || 0;
       
       // Check if artist is in user's favorites
       const artistScore = user.preferences?.favoriteArtists?.includes(event.artist) ? 10 : 0;
@@ -434,8 +434,8 @@ export class MemStorage implements IStorage {
     });
     
     // Sort by score and return top events
-    scoredEvents.sort((a, b) => b.score - a.score);
-    return scoredEvents.map(item => item.event);
+    scored.sort((a, b) => b.score - a.score);
+    return scored.map(item => item.event);
   }
 }
 
