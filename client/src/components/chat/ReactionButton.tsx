@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Heart, Smile, Clap } from "lucide-react";
+import { Heart, Smile, Hand } from "lucide-react";
 import { useEvents } from "@/lib/stores/useEvents";
 import { useAuth } from "@/lib/stores/useAuth";
 import { useAudio } from "@/lib/stores/useAudio";
@@ -10,7 +10,7 @@ import { useAudio } from "@/lib/stores/useAudio";
 const reactionIcons: Record<string, React.ReactNode> = {
   heart: <Heart className="h-4 w-4" />,
   wow: <Smile className="h-4 w-4" />,
-  clap: <Clap className="h-4 w-4" />,
+  clap: <Hand className="h-4 w-4" />,
 };
 
 // Human-readable labels for each reaction type
