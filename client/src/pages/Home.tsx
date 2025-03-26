@@ -59,39 +59,21 @@ export default function Home() {
                 Join concerts, exhibitions, and cultural events from anywhere in the world with stunning VR and spatial audio.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-purple-900 hover:bg-purple-100 transition-all" asChild>
+                <Button size="lg" className="bg-white text-purple-900 hover:bg-purple-100" asChild>
                   <Link to="/events">Browse Events</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 transition-all" asChild>
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20" asChild>
                   <Link to="/how-it-works">How It Works</Link>
                 </Button>
               </div>
               
               {/* Feature highlights */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8">
+              <div className="grid grid-cols-2 gap-6 pt-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-white/20 p-3 rounded-full">
                     <Headphones className="h-6 w-6 text-white" />
                   </div>
                   <span className="font-medium text-white">3D Spatial Audio</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-3 rounded-full">
-                    <Users className="h-6 w-6 text-white" />
-                  </div>
-                  <span className="font-medium text-white">Live Audience</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-3 rounded-full">
-                    <Music className="h-6 w-6 text-white" />
-                  </div>
-                  <span className="font-medium text-white">Multiple Genres</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-3 rounded-full">
-                    <Tv className="h-6 w-6 text-white" />
-                  </div>
-                  <span className="font-medium text-white">HD Streaming</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-white/20 p-3 rounded-full">
