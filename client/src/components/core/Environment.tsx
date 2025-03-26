@@ -246,11 +246,14 @@ export default function Environment({ type, eventId }: EnvironmentProps) {
   // Generate random positions for audience members in concerts
   const [audiencePositions] = useState(() => {
     if (type === "stadium" || type === "arena" || type === "outdoor_amphitheater") {
-      return Array.from({ length: 50 }, () => ({
+      const audienceCount = type === "stadium" ? 200 : 
+                           type === "arena" ? 150 :
+                           type === "outdoor_amphitheater" ? 100 : 75;
+      return Array.from({ length: audienceCount }, () => ({
         position: [
-          (Math.random() - 0.5) * settings.scale,
-          0, // On the ground
-          (Math.random() * 0.5 + 0.5) * settings.scale / 2, // Only in the positive Z (in front of the stage)
+          (Math.random() - 0.5) * settings.scale * 1.5,
+          Math.random() * 0.5, // Varied heights for stadium seating effect
+          (Math.random() * 0.7 + 0.3) * settings.scale, // Deeper audience area
         ] as [number, number, number],
         scale: 0.8 + Math.random() * 0.4,
       }));
