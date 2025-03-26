@@ -416,12 +416,12 @@ export default function Environment({ type, eventId }: EnvironmentProps) {
       
       {/* Main performer on stage based on event type */}
       {selectedEvent && (
-        <group position={[0, stageProps.stageHeight + 0.1, -6]}>
+        <group position={[0, stageProps.stageHeight + 0.1, -5]}>
           <PerformerModel 
             eventType={selectedEvent.type} 
             genre={selectedEvent.genre}
             position={[0, 0, 0]}
-            scale={2.5}
+            scale={3}
             rotate={true}
           />
         </group>
@@ -430,21 +430,35 @@ export default function Environment({ type, eventId }: EnvironmentProps) {
       {/* Secondary performers for concerts or theater events */}
       {selectedEvent && (selectedEvent.type === "concert" || selectedEvent.type === "theater") && (
         <>
-          <group position={[-5, stageProps.stageHeight + 0.1, -7]}>
+          {/* Drummer positioned at back center */}
+          <group position={[0, stageProps.stageHeight + 0.1, -7]}>
             <PerformerModel 
               eventType={selectedEvent.type}
               genre={selectedEvent.genre}
               position={[0, 0, 0]}
-              scale={2}
+              scale={2.2}
+              rotate={false}
+            />
+          </group>
+          
+          {/* Bass player on the left */}
+          <group position={[-4, stageProps.stageHeight + 0.1, -6]}>
+            <PerformerModel 
+              eventType={selectedEvent.type}
+              genre={selectedEvent.genre}
+              position={[0, 0, 0]}
+              scale={2.5}
               rotate={true}
             />
           </group>
-          <group position={[5, stageProps.stageHeight + 0.1, -7]}>
+          
+          {/* Lead guitar on the right */}
+          <group position={[4, stageProps.stageHeight + 0.1, -6]}>
             <PerformerModel 
               eventType={selectedEvent.type}
               genre={selectedEvent.genre}
               position={[0, 0, 0]}
-              scale={2}
+              scale={2.5}
               rotate={true}
             />
           </group>
