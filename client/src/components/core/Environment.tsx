@@ -4,6 +4,8 @@ import { Sky, Stars, Cloud, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useEvents } from "@/lib/stores/useEvents";
 import SpatialAudio from "@/components/audio/SpatialAudio";
+import EventAudio from "@/components/audio/EventAudio";
+import PerformerModel from "./PerformerModel";
 
 interface EnvironmentProps {
   type: string;
@@ -412,21 +414,67 @@ export default function Environment({ type, eventId }: EnvironmentProps) {
         )}
       </group>
       
-      {/* Simple audience representation for stadium/arena */}
+      {/* Main performer on stage based on event type */}
+      {selectedEvent && (
+        <group position={[0, stageProps.stageHeight + 0.1, -6]}>
+          <PerformerModel 
+            eventType={selectedEvent.type} 
+            genre={selectedEvent.genre}
+            position={[0, 0, 0]}
+            scale={2.5}
+            rotate={true}
+          />
+        </group>
+      )}
+      
+      {/* Secondary performers for concerts or theater events */}
+      {selectedEvent && (selectedEvent.type === "concert" || selectedEvent.type === "theater") && (
+        <>
+          <group position={[-5, stageProps.stageHeight + 0.1, -7]}>
+            <PerformerModel 
+              eventType={selectedEvent.type}
+              genre={selectedEvent.genre}
+              position={[0, 0, 0]}
+              scale={2}
+              rotate={true}
+            />
+          </group>
+          <group position={[5, stageProps.stageHeight + 0.1, -7]}>
+            <PerformerModel 
+              eventType={selectedEvent.type}
+              genre={selectedEvent.genre}
+              position={[0, 0, 0]}
+              scale={2}
+              rotate={true}
+            />
+          </group>
+        </>
+      )}
+      
+      {/* Audience models instead of simple capsules */}
       {audiencePositions.map((item, index) => (
-        <mesh 
-          key={`audience-${index}`} 
-          position={item.position} 
-          scale={[item.scale, item.scale * 2, item.scale]}
-          castShadow
-        >
-          <capsuleGeometry args={[0.2, 1, 4, 8]} />
-          <meshStandardMaterial color={`hsl(${Math.random() * 360}, 70%, 60%)`} />
-        </mesh>
+        <group key={`audience-member-${index}`} position={item.position}>
+          <PerformerModel 
+            eventType="audience"
+            position={[0, 0, 0]}
+            scale={item.scale}
+            rotate={false}
+          />
+        </group>
       ))}
       
       {/* Audio sources based on the environment */}
       <SpatialAudio eventId={eventId} environmentType={type} />
+      
+      {/* Event-specific background music */}
+      {selectedEvent && (
+        <EventAudio 
+          eventType={selectedEvent.type}
+          genre={selectedEvent.genre}
+          environment={type}
+          isActive={true}
+        />
+      )}
     </>
   );
 }
