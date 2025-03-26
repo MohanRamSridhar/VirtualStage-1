@@ -1,0 +1,377 @@
+import { 
+  users, type User, type InsertUser, 
+  events, type Event, type InsertEvent,
+  userEventInteractions, type UserEventInteraction, type InsertUserEventInteraction,
+  chatMessages, type ChatMessage, type InsertChatMessage,
+  reactions, type Reaction, type InsertReaction,
+  UserPreferences
+} from "@shared/schema";
+
+// Interface for all storage operations
+export interface IStorage {
+  // User operations
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUserPreferences(userId: number, preferences: UserPreferences): Promise<User | undefined>;
+  
+  // Event operations
+  getEvent(id: number): Promise<Event | undefined>;
+  getAllEvents(): Promise<Event[]>;
+  getEventsByGenre(genre: string): Promise<Event[]>;
+  getEventsByArtist(artist: string): Promise<Event[]>;
+  getEventsByType(type: string): Promise<Event[]>;
+  getUpcomingEvents(): Promise<Event[]>;
+  getLiveEvents(): Promise<Event[]>;
+  createEvent(event: InsertEvent): Promise<Event>;
+  
+  // User-Event interactions
+  getUserEventInteraction(userId: number, eventId: number): Promise<UserEventInteraction | undefined>;
+  createUserEventInteraction(interaction: InsertUserEventInteraction): Promise<UserEventInteraction>;
+  updateUserEventInteraction(id: number, updates: Partial<UserEventInteraction>): Promise<UserEventInteraction | undefined>;
+  getUserEventInteractions(userId: number): Promise<UserEventInteraction[]>;
+  
+  // Chat messages
+  getChatMessages(eventId: number): Promise<ChatMessage[]>;
+  addChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
+  
+  // Reactions
+  getReactions(eventId: number): Promise<Reaction[]>;
+  addReaction(reaction: InsertReaction): Promise<Reaction>;
+  
+  // Recommendations
+  getRecommendedEvents(userId: number): Promise<Event[]>;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private events: Map<number, Event>;
+  private userEventInteractions: Map<number, UserEventInteraction>;
+  private chatMessages: Map<number, ChatMessage>;
+  private reactions: Map<number, Reaction>;
+  
+  private userIdCounter: number;
+  private eventIdCounter: number;
+  private interactionIdCounter: number;
+  private messageIdCounter: number;
+  private reactionIdCounter: number;
+
+  constructor() {
+    this.users = new Map();
+    this.events = new Map();
+    this.userEventInteractions = new Map();
+    this.chatMessages = new Map();
+    this.reactions = new Map();
+    
+    this.userIdCounter = 1;
+    this.eventIdCounter = 1;
+    this.interactionIdCounter = 1;
+    this.messageIdCounter = 1;
+    this.reactionIdCounter = 1;
+    
+    // Add some initial data
+    this.setupInitialData();
+  }
+
+  private setupInitialData() {
+    // Add some sample events
+    const sampleEvents: InsertEvent[] = [
+      {
+        title: "Neon Dreams Electronic Festival",
+        description: "Experience the ultimate electronic music festival in a futuristic neon-lit virtual stadium.",
+        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
+        duration: 180,
+        type: "concert",
+        genre: "electronic",
+        artist: "Digital Pulse Collective",
+        thumbnail: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "stadium",
+        isLive: false,
+        isPremium: false,
+        tags: ["electronic", "dance", "festival", "night"],
+        spatialAudio: true
+      },
+      {
+        title: "Classical Symphony Under the Stars",
+        description: "A breathtaking classical concert featuring the works of Mozart, Beethoven, and Bach under a starry night sky.",
+        date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2 weeks from now
+        duration: 120,
+        type: "concert",
+        genre: "classical",
+        artist: "Virtual Symphony Orchestra",
+        thumbnail: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "outdoor_amphitheater",
+        isLive: false,
+        isPremium: true,
+        tags: ["classical", "symphony", "orchestra"],
+        spatialAudio: true
+      },
+      {
+        title: "Virtual Art Gallery Opening: Future Visions",
+        description: "Explore cutting-edge digital artworks in an immersive gallery space, featuring works from the world's most innovative digital artists.",
+        date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+        duration: 90,
+        type: "exhibition",
+        genre: "digital art",
+        artist: "Various Digital Artists",
+        thumbnail: "https://images.unsplash.com/photo-1531058020387-3be344556be6",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "gallery",
+        isLive: false,
+        isPremium: false,
+        tags: ["art", "exhibition", "digital", "interactive"],
+        spatialAudio: false
+      },
+      {
+        title: "Rock Legends Reunion",
+        description: "The biggest rock legends come together for a one-night-only virtual concert experience.",
+        date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Tomorrow
+        duration: 150,
+        type: "concert",
+        genre: "rock",
+        artist: "The Rock Legends",
+        thumbnail: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "arena",
+        isLive: true,
+        isPremium: true,
+        tags: ["rock", "live", "concert", "legends"],
+        spatialAudio: true
+      },
+      {
+        title: "Jazz in the Virtual Club",
+        description: "An intimate jazz performance in a faithfully recreated 1920s jazz club environment.",
+        date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+        duration: 120,
+        type: "concert",
+        genre: "jazz",
+        artist: "The Virtual Jazz Quartet",
+        thumbnail: "https://images.unsplash.com/photo-1511192336575-5a79af67a629",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        environment: "club",
+        isLive: false,
+        isPremium: false,
+        tags: ["jazz", "club", "intimate", "night"],
+        spatialAudio: true
+      }
+    ];
+    
+    sampleEvents.forEach(event => this.createEvent(event));
+  }
+
+  // User operations
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username,
+    );
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.email === email,
+    );
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.userIdCounter++;
+    const createdAt = new Date();
+    const user: User = { ...insertUser, id, createdAt };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async updateUserPreferences(userId: number, preferences: UserPreferences): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    
+    const updatedUser: User = {
+      ...user,
+      preferences
+    };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+
+  // Event operations
+  async getEvent(id: number): Promise<Event | undefined> {
+    return this.events.get(id);
+  }
+
+  async getAllEvents(): Promise<Event[]> {
+    return Array.from(this.events.values());
+  }
+
+  async getEventsByGenre(genre: string): Promise<Event[]> {
+    return Array.from(this.events.values()).filter(
+      (event) => event.genre.toLowerCase() === genre.toLowerCase(),
+    );
+  }
+
+  async getEventsByArtist(artist: string): Promise<Event[]> {
+    return Array.from(this.events.values()).filter(
+      (event) => event.artist.toLowerCase().includes(artist.toLowerCase()),
+    );
+  }
+
+  async getEventsByType(type: string): Promise<Event[]> {
+    return Array.from(this.events.values()).filter(
+      (event) => event.type.toLowerCase() === type.toLowerCase(),
+    );
+  }
+
+  async getUpcomingEvents(): Promise<Event[]> {
+    const now = new Date();
+    return Array.from(this.events.values()).filter(
+      (event) => new Date(event.date) > now,
+    ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  async getLiveEvents(): Promise<Event[]> {
+    return Array.from(this.events.values()).filter(
+      (event) => event.isLive,
+    );
+  }
+
+  async createEvent(insertEvent: InsertEvent): Promise<Event> {
+    const id = this.eventIdCounter++;
+    const createdAt = new Date();
+    const event: Event = { ...insertEvent, id, createdAt };
+    this.events.set(id, event);
+    return event;
+  }
+
+  // User-Event interactions
+  async getUserEventInteraction(userId: number, eventId: number): Promise<UserEventInteraction | undefined> {
+    return Array.from(this.userEventInteractions.values()).find(
+      (interaction) => interaction.userId === userId && interaction.eventId === eventId,
+    );
+  }
+
+  async createUserEventInteraction(insertInteraction: InsertUserEventInteraction): Promise<UserEventInteraction> {
+    const id = this.interactionIdCounter++;
+    const interactionTime = new Date();
+    const interaction: UserEventInteraction = { ...insertInteraction, id, interactionTime };
+    this.userEventInteractions.set(id, interaction);
+    return interaction;
+  }
+
+  async updateUserEventInteraction(id: number, updates: Partial<UserEventInteraction>): Promise<UserEventInteraction | undefined> {
+    const interaction = this.userEventInteractions.get(id);
+    if (!interaction) return undefined;
+    
+    const updatedInteraction: UserEventInteraction = {
+      ...interaction,
+      ...updates,
+      interactionTime: new Date() // Update interaction time
+    };
+    
+    this.userEventInteractions.set(id, updatedInteraction);
+    return updatedInteraction;
+  }
+
+  async getUserEventInteractions(userId: number): Promise<UserEventInteraction[]> {
+    return Array.from(this.userEventInteractions.values()).filter(
+      (interaction) => interaction.userId === userId,
+    );
+  }
+
+  // Chat messages
+  async getChatMessages(eventId: number): Promise<ChatMessage[]> {
+    return Array.from(this.chatMessages.values())
+      .filter((message) => message.eventId === eventId)
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }
+
+  async addChatMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
+    const id = this.messageIdCounter++;
+    const timestamp = new Date();
+    const message: ChatMessage = { ...insertMessage, id, timestamp };
+    this.chatMessages.set(id, message);
+    return message;
+  }
+
+  // Reactions
+  async getReactions(eventId: number): Promise<Reaction[]> {
+    return Array.from(this.reactions.values()).filter(
+      (reaction) => reaction.eventId === eventId,
+    );
+  }
+
+  async addReaction(insertReaction: InsertReaction): Promise<Reaction> {
+    const id = this.reactionIdCounter++;
+    const timestamp = new Date();
+    const reaction: Reaction = { ...insertReaction, id, timestamp };
+    this.reactions.set(id, reaction);
+    return reaction;
+  }
+
+  // Recommendations - Simple recommendation algorithm
+  async getRecommendedEvents(userId: number): Promise<Event[]> {
+    const user = await this.getUser(userId);
+    if (!user || !user.preferences) {
+      // Without preferences, return upcoming events
+      return this.getUpcomingEvents();
+    }
+
+    // Get user interactions to analyze their behavior
+    const interactions = await this.getUserEventInteractions(userId);
+    
+    // Track genres the user has interacted with
+    const genreScores: Record<string, number> = {};
+    
+    // Count interactions by genre
+    for (const interaction of interactions) {
+      const event = await this.getEvent(interaction.eventId);
+      if (event) {
+        if (!genreScores[event.genre]) {
+          genreScores[event.genre] = 0;
+        }
+        
+        // Increase score based on interaction type
+        if (interaction.attended) genreScores[event.genre] += 3;
+        if (interaction.bookmarked) genreScores[event.genre] += 2;
+        if (interaction.rating) genreScores[event.genre] += interaction.rating;
+      }
+    }
+    
+    // Add scores from user preferences
+    if (user.preferences.genres) {
+      for (const genre of user.preferences.genres) {
+        if (!genreScores[genre]) {
+          genreScores[genre] = 0;
+        }
+        genreScores[genre] += 5; // Preferences get a high weight
+      }
+    }
+    
+    // Get all upcoming events
+    const upcomingEvents = await this.getUpcomingEvents();
+    
+    // Score each event
+    const scoredEvents = upcomingEvents.map(event => {
+      const genreScore = genreScores[event.genre] || 0;
+      
+      // Check if artist is in user's favorites
+      const artistScore = user.preferences?.favoriteArtists?.includes(event.artist) ? 10 : 0;
+      
+      return {
+        event,
+        score: genreScore + artistScore
+      };
+    });
+    
+    // Sort by score and return top events
+    scoredEvents.sort((a, b) => b.score - a.score);
+    return scoredEvents.map(item => item.event);
+  }
+}
+
+export const storage = new MemStorage();

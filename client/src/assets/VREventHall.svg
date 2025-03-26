@@ -1,0 +1,89 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="800" height="600" fill="url(#bg_gradient)" />
+  
+  <!-- Floor -->
+  <path d="M50 500 L400 400 L750 500 L750 550 L400 450 L50 550 Z" fill="#333333" />
+  <path d="M50 500 L400 400 L750 500" stroke="#444444" stroke-width="2" />
+  
+  <!-- Stage -->
+  <path d="M250 450 L550 450 L500 350 L300 350 Z" fill="#222222" />
+  <rect x="280" y="330" width="240" height="30" fill="#111111" />
+  
+  <!-- Back wall with lighting effects -->
+  <rect x="300" y="180" width="200" height="170" fill="#111111" />
+  
+  <!-- Lighting beams -->
+  <path d="M330 200 L250 500" stroke="url(#beam1)" stroke-width="5" opacity="0.7" />
+  <path d="M400 190 L400 500" stroke="url(#beam2)" stroke-width="5" opacity="0.7" />
+  <path d="M470 200 L550 500" stroke="url(#beam3)" stroke-width="5" opacity="0.7" />
+  
+  <!-- Performer silhouette -->
+  <ellipse cx="400" cy="380" rx="30" ry="10" fill="#000000" opacity="0.5" />
+  <path d="M385 320 Q400 300 415 320 L415 370 Q400 380 385 370 Z" fill="#000000" />
+  
+  <!-- Audience silhouettes -->
+  <ellipse cx="350" cy="480" rx="15" ry="5" fill="#000000" opacity="0.5" />
+  <path d="M342 450 Q350 440 358 450 L358 475 Q350 480 342 475 Z" fill="#000000" opacity="0.7" />
+  
+  <ellipse cx="450" cy="480" rx="15" ry="5" fill="#000000" opacity="0.5" />
+  <path d="M442 450 Q450 440 458 450 L458 475 Q450 480 442 475 Z" fill="#000000" opacity="0.7" />
+  
+  <ellipse cx="300" cy="500" rx="15" ry="5" fill="#000000" opacity="0.5" />
+  <path d="M292 470 Q300 460 308 470 L308 495 Q300 500 292 495 Z" fill="#000000" opacity="0.7" />
+  
+  <ellipse cx="500" cy="500" rx="15" ry="5" fill="#000000" opacity="0.5" />
+  <path d="M492 470 Q500 460 508 470 L508 495 Q500 500 492 495 Z" fill="#000000" opacity="0.7" />
+  
+  <!-- Sound waves visual -->
+  <circle cx="400" cy="380" r="40" stroke="#444444" stroke-width="1" fill="none" opacity="0.5" />
+  <circle cx="400" cy="380" r="60" stroke="#444444" stroke-width="1" fill="none" opacity="0.4" />
+  <circle cx="400" cy="380" r="80" stroke="#444444" stroke-width="1" fill="none" opacity="0.3" />
+  
+  <!-- Speakers -->
+  <rect x="250" y="300" width="20" height="40" fill="#222222" rx="2" />
+  <rect x="530" y="300" width="20" height="40" fill="#222222" rx="2" />
+  
+  <!-- Spotlight effects -->
+  <circle cx="300" cy="180" r="20" fill="#FFFFFF" opacity="0.1" />
+  <circle cx="400" cy="160" r="25" fill="#FFFFFF" opacity="0.1" />
+  <circle cx="500" cy="180" r="20" fill="#FFFFFF" opacity="0.1" />
+  
+  <!-- VR headset icon -->
+  <rect x="680" y="50" width="80" height="40" rx="10" fill="#333333" />
+  <rect x="690" y="60" width="60" height="20" rx="5" fill="#222222" />
+  <path d="M690 70 L750 70" stroke="#444444" stroke-width="2" />
+  
+  <!-- Spatial audio icon -->
+  <circle cx="120" cy="70" r="30" stroke="#444444" stroke-width="2" fill="none" />
+  <circle cx="120" cy="70" r="15" stroke="#444444" stroke-width="2" fill="none" />
+  <path d="M95 70 L145 70" stroke="#444444" stroke-width="2" />
+  <path d="M120 45 L120 95" stroke="#444444" stroke-width="2" />
+  
+  <!-- Title -->
+  <text x="400" y="100" font-family="Arial" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">VR CONCERT EXPERIENCE</text>
+  <text x="400" y="130" font-family="Arial" font-size="16" fill="#999999" text-anchor="middle">IMMERSIVE SPATIAL AUDIO • LIVE INTERACTION</text>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="bg_gradient" x1="0" y1="0" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a1a2e" />
+      <stop offset="1" stop-color="#0f0f1a" />
+    </linearGradient>
+    
+    <linearGradient id="beam1" x1="330" y1="200" x2="250" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff2a6d" />
+      <stop offset="1" stop-color="#ff2a6d" stop-opacity="0" />
+    </linearGradient>
+    
+    <linearGradient id="beam2" x1="400" y1="190" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#05d9e8" />
+      <stop offset="1" stop-color="#05d9e8" stop-opacity="0" />
+    </linearGradient>
+    
+    <linearGradient id="beam3" x1="470" y1="200" x2="550" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d1f7ff" />
+      <stop offset="1" stop-color="#d1f7ff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+</svg>
