@@ -5,26 +5,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEvents } from "@/lib/stores/useEvents";
 import { useAuth } from "@/lib/stores/useAuth";
 import EventCard from "@/components/events/EventCard";
-import { ArrowRight, Music, Calendar, Ticket, Headphones, Users } from "lucide-react";
+import { ArrowRight, Music, Calendar, Ticket, Headphones } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const { events, recommendations, fetchEvents, fetchRecommendations, isLoading } = useEvents();
   const { user, isAuthenticated } = useAuth();
-
+  
   // Fetch events when component mounts
   useEffect(() => {
     fetchEvents();
-
+    
     // Get recommendations if the user is logged in
     if (isAuthenticated && user) {
       fetchRecommendations(user.id);
     }
   }, [fetchEvents, fetchRecommendations, isAuthenticated, user]);
-
+  
   // Get live events for hero section
   const liveEvents = events.filter(event => event.isLive);
-
+  
   // Featured event for hero (first live event or first upcoming)
   const featuredEvent = liveEvents.length > 0
     ? liveEvents[0]
@@ -33,20 +33,20 @@ export default function Home() {
           new Date(a.date).getTime() - new Date(b.date).getTime()
         )[0] || events[0]
       : null;
-
+  
   // Get upcoming events for secondary section
   const upcomingEvents = events
     .filter(e => new Date(e.date) > new Date() && !e.isLive)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 3);
-
+  
   return (
     <>
       <Helmet>
         <title>VREvents - Immersive Virtual Concerts & Cultural Events</title>
         <meta name="description" content="Experience incredible concerts and cultural events in virtual reality with immersive spatial audio and interactive features." />
       </Helmet>
-
+      
       {/* Hero Section with gradient background */}
       <section className="hero-section py-16 mb-12">
         <div className="container mx-auto">
@@ -66,7 +66,7 @@ export default function Home() {
                   <Link to="/how-it-works">How It Works</Link>
                 </Button>
               </div>
-
+              
               {/* Feature highlights */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8">
                 <div className="flex items-center gap-3">
@@ -113,11 +113,11 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
+            
             <div className="relative hidden md:block">
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
               <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-
+              
               <div className="relative">
                 <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-white/10">
                   <div className="aspect-video rounded-lg overflow-hidden bg-black/60 border border-white/10 mb-4">
@@ -131,7 +131,7 @@ export default function Home() {
                       </svg>
                     </div>
                   </div>
-
+                  
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-white font-bold">Live Now</div>
                     <div className="flex items-center">
@@ -139,7 +139,7 @@ export default function Home() {
                       <span className="text-red-400 text-sm">2.4K watching</span>
                     </div>
                   </div>
-
+                  
                   <div className="flex justify-between">
                     <div className="flex gap-2">
                       <div className="w-8 h-8 rounded-full bg-white/10"></div>
@@ -154,9 +154,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      
       <div className="container mx-auto px-4 py-8">
-
+        
         {/* Featured Event Section */}
         {featuredEvent && (
           <section className="mb-12">
@@ -168,7 +168,7 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-
+            
             <Card className="overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-3 min-h-[300px]">
                 <div 
@@ -181,7 +181,7 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-
+                
                 <CardContent className="flex flex-col justify-between p-6">
                   <div>
                     <h3 className="text-xl font-bold mb-2">{featuredEvent.title}</h3>
@@ -201,7 +201,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-
+                  
                   <Button className="w-full" asChild>
                     <Link to={`/events/${featuredEvent.id}`}>
                       {featuredEvent.isLive ? "Join Now" : "View Details"}
@@ -212,7 +212,7 @@ export default function Home() {
             </Card>
           </section>
         )}
-
+        
         {/* Upcoming Events Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -223,7 +223,7 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-
+          
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
@@ -251,7 +251,7 @@ export default function Home() {
             </Card>
           )}
         </section>
-
+        
         {/* Personalized Recommendations Section */}
         {isAuthenticated && recommendations.length > 0 && (
           <section className="mb-12">
@@ -263,7 +263,7 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recommendations.slice(0, 3).map(event => (
                 <EventCard key={event.id} event={event} />
