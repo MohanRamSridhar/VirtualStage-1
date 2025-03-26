@@ -381,10 +381,60 @@ export class MemStorage implements IStorage {
   // Recommendations - Simple recommendation algorithm
   async getRecommendedEvents(userId: number): Promise<Event[]> {
     const user = await this.getUser(userId);
-    if (!user || !user.preferences) {
-      // Without preferences, return upcoming events
+    if (!user) {
       return this.getUpcomingEvents();
     }
+
+    // Get user interactions to analyze their behavior
+    const interactions = await this.getUserEventInteractions(userId);
+    
+    // Track genres and other preferences
+    const genreScores: Record<string, number> = {};
+    const artistScores: Record<string, number> = {};
+    const typeScores: Record<string, number> = {};
+    
+    // Analyze past interactions
+    for (const interaction of interactions) {
+      const event = await this.getEvent(interaction.eventId);
+      if (event) {
+        // Weight different interaction types
+        const score = (interaction.attended ? 5 : 0) + 
+                     (interaction.bookmarked ? 3 : 0) + 
+                     (interaction.rating || 0);
+                     
+        genreScores[event.genre] = (genreScores[event.genre] || 0) + score;
+        artistScores[event.artist] = (artistScores[event.artist] || 0) + score;
+        typeScores[event.type] = (typeScores[event.type] || 0) + score;
+      }
+    }
+
+    // Add user preferences
+    if (user.preferences) {
+      if (user.preferences.genres) {
+        for (const genre of user.preferences.genres) {
+          genreScores[genre] = (genreScores[genre] || 0) + 8;
+        }
+      }
+      if (user.preferences.favoriteArtists) {
+        for (const artist of user.preferences.favoriteArtists) {
+          artistScores[artist] = (artistScores[artist] || 0) + 8;
+        }
+      }
+    }
+
+    // Get all upcoming events and score them
+    const upcomingEvents = await this.getUpcomingEvents();
+    const scoredEvents = upcomingEvents.map(event => ({
+      event,
+      score: (genreScores[event.genre] || 0) * 0.4 +
+             (artistScores[event.artist] || 0) * 0.4 +
+             (typeScores[event.type] || 0) * 0.2
+    }));
+
+    // Sort by score and return top events
+    return scoredEvents
+      .sort((a, b) => b.score - a.score)
+      .map(({event}) => event);
 
     // Get user interactions to analyze their behavior
     const interactions = await this.getUserEventInteractions(userId);

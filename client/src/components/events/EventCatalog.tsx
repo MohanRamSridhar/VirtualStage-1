@@ -58,8 +58,51 @@ export default function EventCatalog() {
   }, {} as Record<string, typeof events>);
   
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="container mx-auto py-6 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-4">Discover Events</h1>
+        {isLoading ? (
+          <div className="flex justify-center p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center p-4">{error}</div>
+        ) : (
+          <>
+            {/* Live Events */}
+            {liveEvents.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">Live Now</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {liveEvents.map(event => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Upcoming Events */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Upcoming Events</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingEvents.map(event => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            </div>
+
+            {/* All Events */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-4">All Events</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {events.map(event => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
         {/* Filter sidebar - hidden on mobile */}
         <div className={`lg:block lg:w-1/4 ${showFilters ? "block" : "hidden"}`}>
           <EventFilter />
