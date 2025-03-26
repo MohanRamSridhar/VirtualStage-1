@@ -1,6 +1,5 @@
 import { Canvas } from "@react-three/fiber";
 import { useState, useEffect } from "react";
-import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
 import { KeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useVRMode } from "@/lib/stores/useVRMode";
@@ -76,7 +75,14 @@ export default function VRScene({ environment, eventId, children }: VRSceneProps
 
   return (
     <div className="w-full h-full">
-      {isXRSupported && <VRButton />}
+      {isXRSupported && (
+        <button 
+          className="fixed top-5 right-5 z-50 bg-primary text-primary-foreground p-2 rounded-md"
+          onClick={() => console.log("VR Button clicked - VR mode would start here")}
+        >
+          Enter VR
+        </button>
+      )}
       
       <KeyboardControls map={keyMap}>
         <Canvas
@@ -113,20 +119,14 @@ export default function VRScene({ environment, eventId, children }: VRSceneProps
             );
           }}
         >
-          <XR>
-            {/* XR Controllers and Hands */}
-            <Controllers />
-            <Hands />
-            
-            {/* Movement Controls */}
-            <VRControls />
-            
-            {/* Environment based on event type */}
-            <Environment type={environment} eventId={eventId} />
-            
-            {/* Render any additional children */}
-            {children}
-          </XR>
+          {/* Movement Controls */}
+          <VRControls />
+          
+          {/* Environment based on event type */}
+          <Environment type={environment} eventId={eventId} />
+          
+          {/* Render any additional children */}
+          {children}
         </Canvas>
       </KeyboardControls>
     </div>
