@@ -54,6 +54,9 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/events" element={<Catalog />} />
                 <Route path="/events/:id" element={<EventPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Headphones, Laptop, Users, VrHeadset, Settings, Globe } from "lucide-react";
+import { Headphones, Laptop, Users, Headset, Settings, Globe } from "lucide-react";
 
 export default function HowItWorks() {
   return (
@@ -30,7 +30,7 @@ export default function HowItWorks() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <VrHeadset className="h-6 w-6 text-primary" />
+                  <Headset className="h-6 w-6 text-primary" />
                   <span>Immersive VR Experience</span>
                 </CardTitle>
                 <CardDescription>

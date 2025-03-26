@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
-import { useXR, XRController } from "@react-three/xr";
 import * as THREE from "three";
 import { useVRMode } from "@/lib/stores/useVRMode";
 import { useAudioControl } from "@/lib/stores/useAudioControl";
@@ -19,11 +18,8 @@ export default function VRControls() {
   // Access the camera
   const { camera } = useThree();
   
-  // Get VR session info
-  const { isPresenting, controllers } = useXR();
-  
-  // Get movement speed from settings
-  const { movementSpeed } = useVRMode();
+  // Get movement speed and VR mode from settings
+  const { movementSpeed, mode: vrMode, vrSession } = useVRMode();
   
   // Audio listener position updater
   const { updateListenerPosition } = useAudioControl();
@@ -49,9 +45,9 @@ export default function VRControls() {
     movement.current.set(0, 0, 0);
     
     // Different control handling based on mode
-    if (isPresenting) {
+    if (vrMode === 'vr' && vrSession) {
       // VR mode uses controllers
-      handleVRControls(controllers, delta);
+      handleVRControls(delta);
     } else {
       // Desktop mode uses keyboard
       handleKeyboardControls(delta);
@@ -69,7 +65,10 @@ export default function VRControls() {
     camera.position.z = THREE.MathUtils.clamp(camera.position.z, -bounds, bounds);
     
     // Ensure we maintain consistent height (no flying or sinking)
-    camera.position.y = 1.6; // Consistent eye height
+    // Only enforce for desktop mode; VR mode needs natural height
+    if (vrMode === 'desktop') {
+      camera.position.y = 1.6; // Consistent eye height for desktop mode
+    }
     
     // Update audio listener position
     const cameraDirection = new THREE.Vector3();
@@ -118,37 +117,41 @@ export default function VRControls() {
     // for simplicity
   };
   
-  // Handle VR controls using controllers
-  const handleVRControls = (vrControllers: XRController[], delta: number) => {
-    // Using primary controller thumbstick or touchpad for movement
-    if (vrControllers.length > 0) {
-      const primaryController = vrControllers[0];
-      const gamepad = primaryController.controller.gamepad;
+  // Handle VR controls using game pads
+  const handleVRControls = (delta: number) => {
+    // In our simplified implementation, we'll check for navigator.getGamepads() 
+    // since we're not using the XR Controllers directly anymore
+    if (navigator.getGamepads) {
+      const gamepads = navigator.getGamepads();
       
-      if (gamepad && gamepad.axes.length >= 2) {
-        // Get thumbstick values
-        const thumbstickX = gamepad.axes[0];
-        const thumbstickY = gamepad.axes[1];
+      for (let i = 0; i < gamepads.length; i++) {
+        const gamepad = gamepads[i];
         
-        // Only move if thumbstick is pushed enough (to prevent drift)
-        if (Math.abs(thumbstickX) > 0.2 || Math.abs(thumbstickY) > 0.2) {
-          // Calculate the direction of movement in world space
-          const cameraDirection = new THREE.Vector3();
-          camera.getWorldDirection(cameraDirection);
-          cameraDirection.y = 0; // Keep movement on horizontal plane
-          cameraDirection.normalize();
+        if (gamepad && gamepad.connected && gamepad.axes.length >= 2) {
+          // Get thumbstick values
+          const thumbstickX = gamepad.axes[0];
+          const thumbstickY = gamepad.axes[1];
           
-          // Get perpendicular direction for strafing
-          const cameraSide = new THREE.Vector3().crossVectors(
-            new THREE.Vector3(0, 1, 0),
-            cameraDirection
-          );
-          
-          // Forward/backward
-          movement.current.add(cameraDirection.clone().multiplyScalar(-thumbstickY));
-          
-          // Left/right
-          movement.current.add(cameraSide.clone().multiplyScalar(thumbstickX));
+          // Only move if thumbstick is pushed enough (to prevent drift)
+          if (Math.abs(thumbstickX) > 0.2 || Math.abs(thumbstickY) > 0.2) {
+            // Calculate the direction of movement in world space
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+            cameraDirection.y = 0; // Keep movement on horizontal plane
+            cameraDirection.normalize();
+            
+            // Get perpendicular direction for strafing
+            const cameraSide = new THREE.Vector3().crossVectors(
+              new THREE.Vector3(0, 1, 0),
+              cameraDirection
+            );
+            
+            // Forward/backward
+            movement.current.add(cameraDirection.clone().multiplyScalar(-thumbstickY));
+            
+            // Left/right
+            movement.current.add(cameraSide.clone().multiplyScalar(thumbstickX));
+          }
         }
       }
     }
