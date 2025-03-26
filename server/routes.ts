@@ -44,6 +44,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const { password, ...userWithoutPassword } = user;
     res.status(201).json(userWithoutPassword);
   }));
+  
+  // Important: More specific routes (with path params) need to be defined before less specific ones
+  app.get("/api/users/username/:username", asyncHandler(async (req, res) => {
+    const username = req.params.username;
+    const user = await storage.getUserByUsername(username);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Don't send password back in response
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
+  }));
 
   app.get("/api/users/:id", asyncHandler(async (req, res) => {
     const userId = parseInt(req.params.id);
@@ -77,11 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }));
 
   // Events routes
-  app.get("/api/events", asyncHandler(async (_req, res) => {
-    const events = await storage.getAllEvents();
-    res.json(events);
-  }));
-
+  // Special event routes first
   app.get("/api/events/upcoming", asyncHandler(async (_req, res) => {
     const events = await storage.getUpcomingEvents();
     res.json(events);
@@ -91,18 +101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const events = await storage.getLiveEvents();
     res.json(events);
   }));
-
-  app.get("/api/events/:id", asyncHandler(async (req, res) => {
-    const eventId = parseInt(req.params.id);
-    const event = await storage.getEvent(eventId);
-    
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
-    }
-    
-    res.json(event);
-  }));
-
+  
   app.get("/api/events/genre/:genre", asyncHandler(async (req, res) => {
     const genre = req.params.genre;
     const events = await storage.getEventsByGenre(genre);
@@ -119,6 +118,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const type = req.params.type;
     const events = await storage.getEventsByType(type);
     res.json(events);
+  }));
+  
+  // All events endpoint
+  app.get("/api/events", asyncHandler(async (_req, res) => {
+    const events = await storage.getAllEvents();
+    res.json(events);
+  }));
+  
+  // Individual event by ID, must be after more specific routes
+  app.get("/api/events/:id", asyncHandler(async (req, res) => {
+    const eventId = parseInt(req.params.id);
+    const event = await storage.getEvent(eventId);
+    
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    
+    res.json(event);
   }));
 
   // User-Event interactions

@@ -55,7 +55,7 @@ export const useAuth = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           // For this demo, we'll simulate login by fetching a user by username
-          // In a real app, you'd use a proper login endpoint
+          // In a real app, you'd use a proper login endpoint with secure password validation
           const response = await fetch(`/api/users/username/${username}`);
           
           if (!response.ok) {
@@ -65,13 +65,21 @@ export const useAuth = create<AuthState>()(
           const user = await response.json();
           
           // In a real app, password validation would happen on the server
-          // This is just a simulation
-          set({ user, isAuthenticated: true, isLoading: false });
+          // This is just a simulation - we'll assume the password is correct for the demo
+          // In a production app, NEVER implement client-side password validation like this
+          if (password) {
+            console.log('Login successful');
+            set({ user, isAuthenticated: true, isLoading: false });
+          } else {
+            throw new Error('Password is required');
+          }
         } catch (error) {
+          console.error('Login error:', error);
           set({ 
             error: error instanceof Error ? error.message : 'Unknown error', 
             isLoading: false 
           });
+          throw error; // Re-throw to allow the component to handle the error
         }
       },
       
