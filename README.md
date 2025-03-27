@@ -83,7 +83,7 @@ The platform learns from your preferences:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/MohanRamSridhar/VirtualStage-1/
+git clone https://github.com/MohanRamSridhar/VirtualStage-1/    
 ```
 
 2. Install dependencies:
