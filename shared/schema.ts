@@ -49,6 +49,7 @@ export const events = pgTable("events", {
   artist: text("artist").notNull(),
   thumbnail: text("thumbnail"),
   videoUrl: text("video_url"),
+  streamUrl: text("stream_url"),
   environment: text("environment").notNull(), // stadium, theater, gallery, etc.
   isLive: boolean("is_live").default(false),
   isPremium: boolean("is_premium").default(false),

@@ -45,11 +45,11 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private events: Map<number, Event>;
-  private userEventInteractions: Map<number, UserEventInteraction>;
-  private chatMessages: Map<number, ChatMessage>;
-  private reactions: Map<number, Reaction>;
+  private users: Map<number, User> = new Map();
+  private events: Map<number, Event> = new Map();
+  private userEventInteractions: Map<number, UserEventInteraction> = new Map();
+  private chatMessages: Map<number, ChatMessage> = new Map();
+  private reactions: Map<number, Reaction> = new Map();
   
   private userIdCounter: number;
   private eventIdCounter: number;
@@ -58,12 +58,6 @@ export class MemStorage implements IStorage {
   private reactionIdCounter: number;
 
   constructor() {
-    this.users = new Map();
-    this.events = new Map();
-    this.userEventInteractions = new Map();
-    this.chatMessages = new Map();
-    this.reactions = new Map();
-    
     this.userIdCounter = 1;
     this.eventIdCounter = 1;
     this.interactionIdCounter = 1;
@@ -135,11 +129,13 @@ export class MemStorage implements IStorage {
         artist: "The Rock Legends",
         thumbnail: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
         videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        streamUrl: "https://cdn.videvo.net/videvo_files/video/premium/video0036/large_watermarked/360_360-0019_preview.mp4",
         environment: "arena",
         isLive: true,
         isPremium: true,
-        tags: ["rock", "live", "concert", "legends"],
-        spatialAudio: true
+        tags: ["rock", "live", "concert", "legends", "streaming"],
+        spatialAudio: true,
+        createdAt: new Date()
       },
       {
         title: "Jazz in the Virtual Club",

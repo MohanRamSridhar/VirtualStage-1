@@ -5,18 +5,20 @@ export interface Event {
   id: number;
   title: string;
   description: string;
-  date: Date;
-  duration: number; // in minutes
-  type: string; // concert, exhibition, theater, etc.
+  date: string;
+  duration: number;
   genre: string;
   artist: string;
+  type: string;
+  isLive: boolean;
   thumbnail?: string;
   videoUrl?: string;
-  environment: string; // stadium, theater, gallery, etc.
-  isLive: boolean;
+  streamUrl?: string;
+  environment: string;
   isPremium: boolean;
   tags: string[];
   spatialAudio: boolean;
+  createdAt: Date;
 }
 
 export interface ChatMessage {
@@ -35,8 +37,16 @@ export interface Reaction {
   timestamp: Date;
 }
 
-interface EventsState {
+interface Filters {
+  genre?: string;
+  type?: string;
+  artist?: string;
+  isLive?: boolean;
+}
+
+interface EventStore {
   events: Event[];
+  currentEvent: Event | null;
   selectedEvent: Event | null;
   recommendations: Event[];
   isLoading: boolean;
@@ -47,13 +57,7 @@ interface EventsState {
   reactions: Reaction[];
   
   // Filters
-  filters: {
-    genre?: string;
-    type?: string;
-    artist?: string;
-    isLive?: boolean;
-    isPremium?: boolean;
-  };
+  filters: Filters;
   
   // Actions
   fetchEvents: () => Promise<void>;
@@ -63,12 +67,16 @@ interface EventsState {
   fetchEventReactions: (eventId: number) => Promise<void>;
   sendChatMessage: (userId: number, eventId: number, message: string) => Promise<void>;
   sendReaction: (userId: number, eventId: number, type: string) => Promise<void>;
-  setFilters: (filters: Partial<EventsState['filters']>) => void;
+  setFilters: (filters: Partial<Filters>) => void;
   clearFilters: () => void;
+  setEvents: (events: Event[]) => void;
+  setCurrentEvent: (event: Event | null) => void;
+  setSelectedEvent: (event: Event | null) => void;
 }
 
-export const useEvents = create<EventsState>((set, get) => ({
+export const useEvents = create<EventStore>((set, get) => ({
   events: [],
+  currentEvent: null,
   selectedEvent: null,
   recommendations: [],
   isLoading: false,
@@ -101,13 +109,7 @@ export const useEvents = create<EventsState>((set, get) => ({
         throw new Error(`Failed to fetch events: ${response.statusText}`);
       }
       
-      let events = await response.json();
-      
-      // Apply any remaining filters on the client side if needed
-      if (filters.isPremium !== undefined) {
-        events = events.filter((event: Event) => event.isPremium === filters.isPremium);
-      }
-      
+      const events = await response.json();
       set({ events, isLoading: false });
     } catch (error) {
       set({ 
@@ -219,15 +221,25 @@ export const useEvents = create<EventsState>((set, get) => ({
     }
   },
   
-  setFilters: (filters) => {
-    set((state) => ({ 
-      filters: { ...state.filters, ...filters } 
+  setFilters: (newFilters) => {
+    set((state) => ({
+      filters: { ...state.filters, ...newFilters }
     }));
-    get().fetchEvents();
   },
   
   clearFilters: () => {
     set({ filters: {} });
-    get().fetchEvents();
+  },
+  
+  setEvents: (events) => {
+    set({ events });
+  },
+  
+  setCurrentEvent: (event) => {
+    set({ currentEvent: event });
+  },
+  
+  setSelectedEvent: (event) => {
+    set({ selectedEvent: event });
   }
 }));
