@@ -83,7 +83,7 @@ The platform learns from your preferences:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/virtual-concert-platform.git
+git clone https://github.com/MohanRamSridhar/VirtualStage-1/
 ```
 
 2. Install dependencies:
@@ -126,21 +126,4 @@ virtual-concert-platform/
     └── services/           # Server services
 ```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Three.js for 3D rendering
-- React Three Fiber for React integration
-- Web Audio API for audio processing
-- All contributors and supporters
-
----
-
-Made with ❤️ for music lovers everywhere
+Made with ❤️ by 210
